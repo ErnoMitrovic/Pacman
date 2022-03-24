@@ -106,6 +106,24 @@ def world():
                 path.goto(x + 10, y + 10)
                 path.dot(2, 'white')
 
+def move_ghost(point, course):
+    if valid(point + course):
+            point.move(course)
+    else:
+        # Move to right
+        if point.x < pacman.x:
+            # Right up | Right down
+            movimiento = [vector(5, 0), vector(0, 5)] if point.y < pacman.y else [vector(5, 0), vector(0, -5)]
+        else:
+            # Left up | left down
+            movimiento = [vector(-5, 0), vector(0, 5)] if point.y < pacman.y else [vector(-5, 0), vector(0, -5)]
+        up()
+        # select randomly the movement to do
+        plan = choice(movimiento)
+        course.x = plan.x
+        course.y = plan.y
+    goto(point.x + 10, point.y + 10)
+    dot(20, 'red')
 
 def move():
     """Move pacman and all ghosts."""
@@ -131,18 +149,7 @@ def move():
     dot(20, 'yellow')
 
     for point, course in ghosts:
-        if valid(point + course):
-            point.move(course)
-        else:
-            options = [
-                vector(5, 0),
-                vector(-5, 0),
-                vector(0, 5),
-                vector(0, -5),
-            ]
-            plan = choice(options)
-            course.x = plan.x
-            course.y = plan.y
+        move_ghost(point, course)
 
         up()
         goto(point.x + 10, point.y + 10)
